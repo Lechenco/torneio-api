@@ -1,0 +1,3 @@
+module "arquitecture" {
+  source = "./arquitecture"
+}
