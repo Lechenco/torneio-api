@@ -10,4 +10,6 @@ public interface JogadoresService {
     Jogador getjogador(String id);
 
     Jogador updateJogador(Jogador jogador);
+
+    void deletaJogador(String idJogador);
 }

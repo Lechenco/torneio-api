@@ -64,6 +64,14 @@ public class JogadoresServiceImpl implements JogadoresService {
         return jogador;
     }
 
+    @Override
+    public void deletaJogador(String idJogador) {
+        Jogador jogador = new Jogador();
+        jogador.setId(idJogador);
+
+        dynamoDBMapper.delete(jogador);
+    }
+
     private DynamoDBSaveExpression buildExpression(Jogador jogador) {
         DynamoDBSaveExpression saveExpression = new DynamoDBSaveExpression();
         Map<String, ExpectedAttributeValue> expectedAttributeMap = new HashMap<>();
