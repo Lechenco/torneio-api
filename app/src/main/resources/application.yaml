@@ -15,24 +15,6 @@ info:
   environment: ${spring.profiles.active}
   version: 0.0.1
 
-management.metrics.tags.application: ${spring.application.name}
-management.metrics.distribution.percentiles-histogram.http.server.requests: true
-management.metrics.distribution.percentiles-histogram.resilience4j.circuitbreaker.calls: true
-
-resilience4j:
-  circuitbreaker:
-    configs:
-      default:
-        slidingWindowSize: 5
-        permittedNumberOfCallsInHalfOpenState: 3
-        waitDurationInOpenState: 10000
-        failureRateThreshold: 60
-        eventConsumerBufferSize: 2
-        registerHealthIndicator: true
-        slidingWindowType: COUNT_BASED
-        recordExceptions:
-          - io.github.lechenco.tier.exceptions.OpenCircuitBreakerException
-
 aws:
   dyanmodb:
     endpoint: ${DYNAMO_ENDPOINT:http://localhost:4566}
