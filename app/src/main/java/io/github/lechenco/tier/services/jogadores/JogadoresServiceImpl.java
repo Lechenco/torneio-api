@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
+
+import io.github.lechenco.tier.infraestructure.exceptions.NotFoundException;
 
 @Service
 public class JogadoresServiceImpl implements JogadoresService {
@@ -27,20 +28,20 @@ public class JogadoresServiceImpl implements JogadoresService {
     }
 
     @Override
-    public Jogador getjogador(String id) {
-        if (!StringUtils.hasLength(id)) {
-            // TODO JogadorException
-        }
+    public Jogador getjogador(String id) throws NotFoundException {
         Jogador jogador = dynamoDBMapper.load(Jogador.class, id);
+        if (jogador == null) {
+            throw new NotFoundException(
+                    String.format("Jogador [%s] não encontrado", id));
+        }
         return jogador;
     }
 
     @Override
     public Jogador save(Jogador jogador) {
-        logger.info("Salvando jogador na base de dados. nome: {} id: {}", jogador.getNome(), jogador.getId());
-        if (ObjectUtils.isEmpty(jogador)) {
-            // TODO JogadorException
-        }
+        logger.info("Salvando jogador na base de dados. nome: {} id: {}",
+                jogador.getNome(), jogador.getId());
+
         dynamoDBMapper.save(jogador);
         logger.info("Jogador salvo na base de dados. {}", jogador);
 
@@ -57,9 +58,6 @@ public class JogadoresServiceImpl implements JogadoresService {
 
     @Override
     public Jogador updateJogador(Jogador jogador) {
-        if (ObjectUtils.isEmpty(jogador)) {
-            // TODO
-        }
         dynamoDBMapper.save(jogador, buildExpression(jogador));
         return jogador;
     }
